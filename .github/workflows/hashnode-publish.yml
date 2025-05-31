@@ -1,5 +1,9 @@
 name: Hashnode Article Publish
 
+permissions:
+  id-token: write
+  contents: write
+
 on:
   push:
     branches:
