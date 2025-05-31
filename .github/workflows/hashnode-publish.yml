@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actionsforge/actions-hashnode-publish@v1
         with:
           command: validate
@@ -23,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actionsforge/actions-hashnode-publish@v1
         with:
           command: publish
@@ -31,3 +33,20 @@ jobs:
           file_path: articles/
           is_draft: false
           recursive: true
+        continue-on-error: true
+
+      - name: Commit and force push if changed
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if ! git diff --quiet || ! git diff --staged --quiet; then
+            git add .
+            git commit -m "chore: update after hashnode publish"
+            git push --force
+          fi
+
+      - name: Fail if Article Publish errored
+        if: steps.apply.outcome == 'failure'
+        run: exit 1
