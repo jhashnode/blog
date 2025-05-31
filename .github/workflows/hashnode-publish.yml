@@ -1,0 +1,33 @@
+name: Hashnode Article Publish
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "articles/**/*.md"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actionsforge/actions-hashnode-publish@v1
+        with:
+          command: validate
+          file_path: articles/
+          recursive: true
+
+  publish:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actionsforge/actions-hashnode-publish@v1
+        with:
+          command: publish
+          token: ${{ secrets.HASHNODE_TOKEN }}
+          publication_id: ${{ secrets.HASHNODE_PUBLICATION_ID }}
+          file_path: articles/
+          is_draft: false
+          recursive: true
