@@ -1,0 +1,20 @@
+name: Hashnode Article Validation
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - "articles/**/*.md"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actionsforge/actions-hashnode-publish@v1
+        with:
+          command: validate
+          file_path: articles/
+          recursive: true  # Process all markdown files in subdirectories
+          continue_on_error: true  # Continue even if some files have validation errors
