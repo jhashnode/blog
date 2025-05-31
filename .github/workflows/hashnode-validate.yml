@@ -18,3 +18,8 @@ jobs:
           file_path: articles/
           recursive: true  # Process all markdown files in subdirectories
           continue_on_error: true  # Continue even if some files have validation errors
+        continue-on-error: true
+
+      - name: Fail if Article Publish errored
+        if: steps.apply.outcome == 'failure'
+        run: exit 1
